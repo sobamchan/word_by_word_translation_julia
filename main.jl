@@ -24,14 +24,13 @@ module WT
     end
 
 
-    function get_nn(word, src_emb, si2w, tgt_emb, ti2w, K=5)
-    end
-
-
     function translate(words, sembs, si2w, tembs, ti2w)
         w2i = Dict(v => k for (k, v) in si2w)
+        result_words = Array{String}([])
         for word in words
             if haskey(w2i, word)
+                word_emb = sembs[w2i[word]]
+                scores = (tembs / )
             else
             end
         end
