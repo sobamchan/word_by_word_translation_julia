@@ -63,19 +63,22 @@ module WT
         @add_arg_table s begin
             "--output-path", "-o"
             "--input-path", "-i"
-            "--input-vec", "-iv"
-            "--output-vec", "-ov"
+            "--input-vec", "-s"
+            "--output-vec", "-t"
         end
         args = parse_args(ARGS, s)
 
         inv, ini2w, inw2i = load_vec(args["input-vec"])
         outv, outi2w, outw2i = load_vec(args["output-vec"])
 
+        f = open(args["output-path"], "a")
+
         open(args["input-path"]) do io
             for (i, line) in enumerate(eachline(io))
                 words = split(lowercase(line))
                 pred_words = translate(words, inv, ini2w, outv, outi2w)
                 pred_str = join(pred_words, " ")
+                write(f, string(pred_str, "\n"))
             end
         end
     end
