@@ -1,5 +1,6 @@
 module WT
     using ArgParse
+    using ProgressMeter
 
     function load_vec(path, nmax=50000)
         vectors = Array{Array{Float64}}([])
@@ -68,19 +69,26 @@ module WT
         end
         args = parse_args(ARGS, s)
 
+        println("Loading datas...")
         inv, ini2w, inw2i = load_vec(args["input-vec"])
         outv, outi2w, outw2i = load_vec(args["output-vec"])
 
-        f = open(args["output-path"], "a")
+        out_f = open(args["output-path"], "a")
 
-        open(args["input-path"]) do io
-            for (i, line) in enumerate(eachline(io))
-                words = split(lowercase(line))
-                pred_words = translate(words, inv, ini2w, outv, outi2w)
-                pred_str = join(pred_words, " ")
-                write(f, string(pred_str, "\n"))
-            end
+        println("Start translating...")
+        in_f = open(args["input-path"])
+        lines = readlines(in_f)
+
+        @showprogress 1 "Translating" for (i, line) in enumerate(lines)
+            words = split(lowercase(line))
+            pred_words = translate(words, inv, ini2w, outv, outi2w)
+            pred_str = join(pred_words, " ")
+            write(out_f, string(pred_str, "\n"))
         end
+
+        println("Closing up...")
+        close(out_f)
+        close(in_f)
     end
 
 end
