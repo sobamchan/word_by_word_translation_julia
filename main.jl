@@ -80,6 +80,7 @@ module WT
         lines = readlines(in_f)
 
         @showprogress 1 "Translating" for (i, line) in enumerate(lines)
+            # println("$i / $(length(lines))")
             words = split(lowercase(line))
             pred_words = translate(words, inv, ini2w, outv, outi2w)
             pred_str = join(pred_words, " ")
